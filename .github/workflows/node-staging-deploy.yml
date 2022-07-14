@@ -21,6 +21,7 @@ jobs:
           Host deploy_staging
             HostName $SSH_HOST
             User $SSH_USER
+            Port $SSH_PORT
             IdentityFile ~/.ssh/staging.key
             IdentitiesOnly yes
             StrictHostKeyChecking no
@@ -29,6 +30,7 @@ jobs:
           SSH_USER: ${{ secrets.PANGOLIN_SSH_USER }}
           SSH_KEY: ${{ secrets.PANGOLIN_SSH_KEY }}
           SSH_HOST: ${{ secrets.PANGOLIN_SSH_HOST }}
+          SSH_PORT: ${{ secrets.PANGOLIN_SSH_PORT }}
           KNOWN_HOSTS: ${{ secrets.PANGOLIN_KNOWN_HOSTS }}
 
       - uses: actions/checkout@v3
