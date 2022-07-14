@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: ⚒️ Install necessaire tools
-        run: npm i pm2
+        run: npm i -g pm2
 
       - name: 🚀 Deploy
         run: pm2 deploy ecosystem.config.js pangolin
