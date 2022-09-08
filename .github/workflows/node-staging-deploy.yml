@@ -6,6 +6,10 @@ concurrency:
 
 on:
   workflow_call:
+    inputs:
+      deploy_url:
+        type: string
+        required: true
 
 jobs:
   deploy:
@@ -41,9 +45,35 @@ jobs:
       - name: ⚒️ Install necessaire tools
         run: npm i -g pm2
 
+      - uses: altinukshini/deployment-action@releases/v1
+        name: 🐙 Create GitHub deployment
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          target_url: "${{ inputs.deploy_url }}"
+          environment: staging
+
       - name: 📦 Setup repo
         run: pm2 deploy ecosystem.config.js baloo setup
         continue-on-error: true
 
       - name: 🚀 Deploy
         run: pm2 deploy ecosystem.config.js baloo update --force
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: altinukshini/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target_url: "${{ inputs.deploy_url }}"
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: altinukshini/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target_url: "${{ inputs.deploy_url }}"
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
