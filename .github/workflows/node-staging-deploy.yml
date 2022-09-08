@@ -27,11 +27,11 @@ jobs:
             StrictHostKeyChecking no
           END
         env:
-          SSH_USER: ${{ secrets.PANGOLIN_SSH_USER }}
-          SSH_KEY: ${{ secrets.PANGOLIN_SSH_KEY }}
-          SSH_HOST: ${{ secrets.PANGOLIN_SSH_HOST }}
-          SSH_PORT: ${{ secrets.PANGOLIN_SSH_PORT }}
-          KNOWN_HOSTS: ${{ secrets.PANGOLIN_KNOWN_HOSTS }}
+          SSH_USER: ${{ secrets.BALOO_SSH_USER }}
+          SSH_KEY: ${{ secrets.BALOO_SSH_KEY }}
+          SSH_HOST: ${{ secrets.BALOO_SSH_HOST }}
+          SSH_PORT: ${{ secrets.BALOO_SSH_PORT }}
+          KNOWN_HOSTS: ${{ secrets.BALOO_KNOWN_HOSTS }}
 
       - uses: actions/checkout@v3
 
@@ -42,4 +42,4 @@ jobs:
         run: npm i -g pm2
 
       - name: 🚀 Deploy
-        run: pm2 deploy ecosystem.config.js pangolin setup && pm2 deploy ecosystem.config.js pangolin update --force
+        run: pm2 deploy ecosystem.config.js baloo setup && pm2 deploy ecosystem.config.js baloo update --force
