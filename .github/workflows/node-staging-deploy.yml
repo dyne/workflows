@@ -41,5 +41,9 @@ jobs:
       - name: ⚒️ Install necessaire tools
         run: npm i -g pm2
 
+      - name: 📦 Setup repo
+        run: pm2 deploy ecosystem.config.js baloo setup
+        continue-on-error: true
+
       - name: 🚀 Deploy
-        run: pm2 deploy ecosystem.config.js baloo setup && pm2 deploy ecosystem.config.js baloo update --force
+        run: pm2 deploy ecosystem.config.js baloo update --force
