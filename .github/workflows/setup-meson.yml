@@ -1,0 +1,13 @@
+name: Meson setup
+
+on:
+  workflow_call:
+
+jobs:
+  setup-meson:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v4
+      - run: |
+          pip3 install meson ninja
+          sudo apt-get install --force-yes zsh
