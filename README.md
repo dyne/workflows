@@ -69,9 +69,7 @@ jobs:
 ***
 ## 😍 Acknowledgements
 
-<div style="width: 20%;">
-[![software by Dyne.org](https://files.dyne.org/software_by_dyne.png)](http://www.dyne.org)
-</div>
+<img alt="software by Dyne.org" src="https://files.dyne.org/software_by_dyne.png" height="250"/>
 
 Copyleft (ɔ) 2022 by [Dyne.org](https://www.dyne.org) foundation, Amsterdam
 
