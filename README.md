@@ -21,6 +21,30 @@
 
 
 ***
+## 📐 Starters ecosystem
+
+### Deploy a pocketbase instance
+
+Deploy automatically on the pocketbase server create a file 
+under `.github/workflows/pocketbase.yml` with the following content
+
+```
+name: 🚀 Backend deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    uses: dyne/workflows/.github/workflows/pocketbase-deploy.yml@main
+    secrets: inherit
+    with:
+      project_name: your_project_name
+      fqdn: "https://your-backend.dyne.org:8090"
+```
+
+
 ## 📦 Node ecosystem
 
 ### Deploy on baloo.dyne.org the staging environment

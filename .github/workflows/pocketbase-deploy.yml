@@ -1,0 +1,80 @@
+name: Deploy on pocketbase
+
+concurrency:
+  group: staging
+  cancel-in-progress: true
+
+on:
+  workflow_call:
+    inputs:
+      project_name:
+        type: string
+        required: true
+      fqnd:
+        type: string
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ inputs.fqnd }}
+    steps:
+      - name: 📂 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🐹 Setup Golang
+        uses: actions/setup-go@v4
+
+      - run: make setup_git
+      - run: make setup_submodules
+      - name: 🖥️ Setup the server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.POCKETBASE_SSH_HOST }}
+          username: ${{ secrets.POCKETBASE_SSH_USER }}
+          key: ${{ secrets.POCKETBASE_SSH_KEY}}
+          port: ${{ secrets.POCKETBASE_SSH_PORT }}
+          script: |
+            mkdir -p ${{inputs.project_name}}/pb_data
+            mkdir -p ${{inputs.project_name}}/pb_migrations
+
+      - name: 📦 Build
+        run: make setup_backend
+
+      - uses: altinukshini/deployment-action@releases/v1
+        name: 🐙 Create GitHub deployment
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          target_url: "${{ inputs.fqnd}}"
+          environment: staging
+
+      - name: 🚀 Deploy
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.POCKETBASE_SSH_HOST }}
+          username: ${{ secrets.POCKETBASE_SSH_USER }}
+          key: ${{ secrets.POCKETBASE_SSH_KEY}}
+          port: ${{ secrets.POCKETBASE_SSH_PORT }}
+          source: "admin/pb"
+          target: ${{inputs.project_name}}/pb
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: altinukshini/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target_url: "${{ inputs.fqnd}}"
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: altinukshini/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target_url: "${{ inputs.fqnd}}"
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
