@@ -38,7 +38,6 @@ jobs:
           port: ${{ secrets.POCKETBASE_SSH_PORT }}
           script: |
             mkdir -p apps/${{inputs.project_name}}/admin/pb_data
-            mkdir -p apps/${{inputs.project_name}}/admin/pb_migrations
 
       - name: 📦 Build
         run: make setup_backend
@@ -58,7 +57,7 @@ jobs:
           username: ${{ secrets.POCKETBASE_SSH_USER }}
           key: ${{ secrets.POCKETBASE_SSH_KEY}}
           port: ${{ secrets.POCKETBASE_SSH_PORT }}
-          source: "./admin/pb"
+          source: "./admin/pb,./admin/migrations,./admin/pb_migrations"
           target: apps/${{inputs.project_name}}/
 
       - name: Update deployment status (success)
