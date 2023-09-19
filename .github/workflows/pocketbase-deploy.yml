@@ -58,8 +58,8 @@ jobs:
           username: ${{ secrets.POCKETBASE_SSH_USER }}
           key: ${{ secrets.POCKETBASE_SSH_KEY}}
           port: ${{ secrets.POCKETBASE_SSH_PORT }}
-          source: "admin/pb"
-          target: ${{inputs.project_name}}/pb
+          source: "./admin/pb"
+          target: ${{inputs.project_name}}/
 
       - name: Update deployment status (success)
         if: success()
